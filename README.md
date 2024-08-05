@@ -3,7 +3,7 @@
 ##Back-End
 - npm i
 - npm i express
-- mpm i mysql2
+- npm i mysql2
 - npm nodemon
   
 
