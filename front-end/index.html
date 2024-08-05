@@ -17,9 +17,17 @@
 <body>
 	<div id="app" class="app">
 		<div class="nav">
-			barra de navegação
+			<div class="logo">
+				<img src="" alt="">
+				logo
+			</div>
+			<div class="labs">
+				<div :class="['labsItem', { 'click': produtosShow }]" @click="buscarProdutos()">Produtos</div>
+				<div :class="['labsItem', { 'click': pedidosShow }]" @click="buscarPedidos">Pedidos</div>
+				<div :class="['labsItem', { 'click': suporteShow }]" @click="abreSuporte()">Suporte</div>
+			</div>
 		</div>
-		<div class="main">
+		<div class="produtos" v-if="produtosShow">
 			<div class="pesquisaCadastro">
 				<div class="pesquisa">
 					<div class="pesquisaTitulo">
@@ -153,6 +161,9 @@
 
 
 		</div>
+		<div class="pedidos" v-if="pedidosShow">
+			Pedidos
+		</div>
 	</div>
 
 	<script>
@@ -161,6 +172,8 @@
 		const app = createApp({
 			data() {
 				return {
+					produtosShow: false,
+					pedidosShow: false,
 					usuarios: [],
 					nome: '',
 					sobrenome: '',
@@ -175,6 +188,14 @@
 				},
 			},
 			methods: {
+				buscarProdutos(){
+					this.produtosShow = true
+					this.pedidosShow = false
+				},
+				buscarPedidos(){
+					this.produtosShow = false
+					this.pedidosShow = true
+				},
 				abrirModalCadastrar() {
 					$('#modalCadastrar').modal('show');
 				},

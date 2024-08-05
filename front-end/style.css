@@ -11,12 +11,33 @@ body {
 }
 
 .nav {
-  height: 50px;
+  height: 60px;
   width: 100%;
-  /* background: red; */
+  background: rgb(166, 166, 231);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem 0 1rem;
+  justify-content: space-between;
+}
+.labs{
+  display: flex;
+  gap: 12px;
+}
+.labsItem{
+  cursor: pointer;
+  transition: 300ms;
+}
+.labsItem:hover{
+  /* text-decoration: underline; */
+  color: white;
+}
+.click{
+  text-decoration: underline;
+  color: white;
 }
 
-.main {
+
+.produtos {
   display: flex;
   flex-direction: column;
   height: 100%;
