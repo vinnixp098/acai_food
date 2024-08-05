@@ -2,19 +2,21 @@ import { query } from 'express';
 import conexao from '../config/db.js';
 
 const createUSer = async (nome, sobrenome, email) => {
-  const [rows] = await conexao.query('INSERT INTO usuarios (nome, sobrenome, email, data_criacao) VALUES (?, ?, ?, NOW())', [nome, sobrenome, email]);
+  console.log(nome, sobrenome, email)
+  const [rows] = await conexao.query('INSERT INTO estudos.clientes (nome, sobrenome, email, data_cadastro) VALUES (?, ?, ?, NOW())', [nome, sobrenome, email]);
+  console.log("rows:", rows)
   return rows;
 };
 
 const getAllUsers = async () => {
-  const [rows] = await conexao.query('SELECT * FROM usuarios');
+  const [rows] = await conexao.query('SELECT * FROM clientes');
   return rows;
 };
 
 const editUserById = async (nome, sobrenome, email, id) => {
   try {
     const query = `
-      UPDATE estudos.usuarios 
+      UPDATE estudos.clientes 
       SET nome = ?, sobrenome = ?, email = ?, data_edicao = NOW()
       WHERE usuario_id = ?
     `;
@@ -42,7 +44,7 @@ const deleteUSerById = async (id) => {
     }
 
     // Executa a query de exclusão
-    const [result] = await conexao.query('DELETE FROM usuarios WHERE usuario_id = ?', [id]);
+    const [result] = await conexao.query('DELETE FROM clientes WHERE usuario_id = ?', [id]);
 
     // Log do resultado para depuração
     console.log("Resultado da query:", result);
