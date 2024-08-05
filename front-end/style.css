@@ -43,7 +43,6 @@ body {
 }
 
 .tabela{
-  background: #000;
   height: 60vh;
   /* padding: 1rem; */
   overflow-y: auto;
@@ -52,7 +51,6 @@ thead{
   position: static  ;
 }
 .table {
-  background: #000;
   width: 100%;
   height: 70%;
   overflow-y: auto;
