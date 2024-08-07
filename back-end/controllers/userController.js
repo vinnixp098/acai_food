@@ -15,9 +15,9 @@ const createUSer = async (req, res) => {
 };
 
 const deleteUSerById = async (req, res) => {
-	const {usuario_id} = req.body;
+	const {usuario_id, excluido} = req.body;
 	try {
-		const result = await UserModel.deleteUSerById(usuario_id);
+		const result = await UserModel.deleteUSerById(usuario_id, excluido);
 		if (result.affectedRows === 0) {
 			return res.status(404).json({ message: 'Não foi possível deletar o usuário' });
 		}

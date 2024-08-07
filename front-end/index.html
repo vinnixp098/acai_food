@@ -18,8 +18,7 @@
 	<div id="app" class="app">
 		<div class="nav">
 			<div class="logo">
-				<img src="" alt="">
-				logo
+				<img src="./Assets/Images/Logo-acai-Png-1024x1024-removebg-preview (1).png" alt="">
 			</div>
 			<div class="labs">
 				<div :class="['labsItem', { 'click': produtosShow }]" @click="buscarProdutos()">Produtos</div>
@@ -90,7 +89,7 @@
 				<div class="alert alert-danger" role="alert" v-show="erroTabela">
 					Não há dados para exibir.
 				</div>
-				<table class="table" v-show="!erroTabela && !carregandoTabela ">
+				<table class="table" v-show="usuarios.length > 0">
 					<thead>
 						<tr>
 							<th scope="col">Nº</th>
@@ -108,7 +107,7 @@
 							<td>{{ usuario.nome }}</td>
 							<td>{{ usuario.sobrenome }}</td>
 							<td>{{ usuario.email }}</td>
-							<td>{{ usuario.data_cadastro }}</td>
+							<td>{{ usuario.data_criacao }}</td>
 							<td>{{ usuario.data_edicao }}</td>
 							<td>
 								<div class="botoes">
@@ -238,31 +237,32 @@
 						alert("Erro ao criar usuário!")
 					}
 					this.buscarUsuarios();
-
-
 				},
-
 
 				async buscarUsuarios() {
 					this.carregandoTabela = true;
-					this.erroTabela = false
+					this.erroTabela = false;
 					try {
-						const response = await axios.get('http://localhost:3000/api/usuarios');
-						if (response.data.length > 0) {
-							this.usuarios = response.data;
-							console.log("Usuários:", this.usuarios)
-							this.carregandoTabela = false
-						} else {
-							this.erroTabela = true;
-							this.carregandoTabela = false
-						}
+							const response = await axios.get('http://localhost:3000/api/usuarios');
+							if (response.data.length > 0) {
+									// Supondo que cada usuário tem uma propriedade 'dataCadastro' com a data
+									this.usuarios = response.data.map(usuario => ({
+											...usuario,
+											dataCadastroFormatada: dayjs(usuario.data_cadastro).format('DD/MM/YYYY - HH:mm'),
+											dataEdicaoFormatada: dayjs(usuario.data_edicao).format('DD/MM/YYYY - HH:mm') // Formata a data como dia/mês/ano
+									}));
+									console.log("Usuários:", this.usuarios);
+									this.carregandoTabela = false;
+							} else {
+									this.erroTabela = true;
+									this.carregandoTabela = false;
+							}
 
 					} catch (error) {
-						console.error('Error:', error);
-						this.carregandoTabela = false
-						this.erroTabela = true
+							console.error('Error:', error);
+							this.carregandoTabela = false;
+							this.erroTabela = true;
 					}
-
 				},
 
 				async editarUsuario(nome, sobrenome, email, id) {
@@ -296,11 +296,11 @@
 					this.buscarUsuarios();
 				},
 
-				async deletarUsuario(id, nome) {
+				async deletarUsuario(id) {
 					try {
 						const response = await axios.post('http://localhost:3000/api/deletar-usuario', {
 							usuario_id: id,
-							// nome: nome
+							excluido: "S"
 						});
 
 						if (response.data.message) {

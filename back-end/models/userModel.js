@@ -9,7 +9,7 @@ const createUSer = async (nome, sobrenome, email) => {
 };
 
 const getAllUsers = async () => {
-  const [rows] = await conexao.query('SELECT * FROM clientes');
+  const [rows] = await conexao.query('SELECT * FROM usuarios where excluido = "N"');
   return rows;
 };
 
@@ -34,7 +34,7 @@ const editUserById = async (nome, sobrenome, email, id) => {
 };
 
 
-const deleteUSerById = async (id) => {
+const deleteUSerById = async (id, excluido) => {
   try {
     console.log("Id:", id);
 
@@ -43,11 +43,17 @@ const deleteUSerById = async (id) => {
       throw new Error("O ID do usuário não foi fornecido.");
     }
 
+    const query = `
+      UPDATE estudos.usuarios 
+      SET excluido = ?
+      WHERE usuario_id = ?
+    `;
+
     // Executa a query de exclusão
     const [result] = await conexao.query('DELETE FROM clientes WHERE usuario_id = ?', [id]);
 
     // Log do resultado para depuração
-    console.log("Resultado da query:", result);
+    console.log("excluido:", excluido);
 
     // Verifica se alguma linha foi afetada
     if (result && result.affectedRows === 0) {
