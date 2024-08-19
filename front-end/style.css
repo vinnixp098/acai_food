@@ -1,12 +1,18 @@
 body {
   height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
   /* background: #000; */
 }
 .app {
-  /* height: 100%; */
+  height: 100%;
   width: 100%;
   gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
 }
 .nav {
   height: 60px;
@@ -14,8 +20,9 @@ body {
   background: rgb(166, 166, 231);
   display: flex;
   align-items: center;
-  padding: 0 1rem 0 1rem;
+  padding: 0 3rem 0 3rem;
   justify-content: space-between;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.20);
 }
 .logo{
   background: none;
@@ -25,13 +32,6 @@ body {
   box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
 
 }
-img{
-  border: none;
-  border-radius: 5px;
-  background: none;
-  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
-  width: 60px;
-}
 .labs{
   display: flex;
   gap: 12px;
@@ -39,28 +39,138 @@ img{
 .labsItem{
   cursor: pointer;
   transition: 300ms;
+  font-weight: 500;
+  color: white
 }
 .labsItem:hover{
   /* text-decoration: underline; */
-  color: white;
+  color: purple;
 }
 .click{
   text-decoration: underline;
-  color: white;
+  color: purple;
 }
-.main {
+/* Início */
+
+.inicio{
+  width: 100%;
+  height: 100%;
+  /* background: red; */
+  /* margin-bottom: 10rem; */
+  display: flex;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 1rem;
+}
+.carrossel{
+  height: 35vh;
+  width: 100%;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+.carrossel img{
+  width: 12%;
+  height: 100%;   
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid gray;
+  transition: all ease-in-out 500ms;
+  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.1);
+}
+.carrossel img:hover{
+  width: 16%;
+}
+.sugestoes{
+  /* background: green; */
+  width: 100%;
+  height: 40vh;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
   gap: 1rem;
-  /* background: green; */
+  /* height: 100%; */
+  padding: 0 3rem 0 3rem;
+  font-size: 16px;
+  font-weight: 600;
 }
+.sugestoesLista{
+  height: 40vh;
+  /* background: red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  justify-content: start;
+}
+.sugestoesItem{
+  /* background: green; */
+  cursor: pointer;
+  border: 1px solid gray;
+  width: 100%;
+  height: 40vh;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: 400ms;
+  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.1);
+}
+.sugestoesItem:hover{
+  transform: scale(1.02);
+}
+.sugestoesItem .imagem{
+  height: 70%;
+  width: 100%;
+
+}
+.sugestoesItem .imagem img{
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+
+}
+.sugestoesItem .descricao{
+  /* background: #000; */
+  height: 30%;
+  border-radius: 0 0 10px 10px;
+  padding: 6px 20px 6px 20px;
+  display: flex;
+  flex-direction: column;
+
+}
+.nomeProduto{
+  /* background: green; */
+  font-size: 16px;
+  color: #606060;
+}
+.acompanhamentos{
+  /* background: yellow; */
+  font-size: 12px;
+  color: #606060;
+}
+.preco{
+  /* background: red; */
+  text-align: center;
+  font-size: 18px;
+  color: green;
+}
+
+
+/* Produtos */
+.produtos{
+  /* background: red; */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
 .pesquisaCadastro {
   display: flex;
   justify-content: space-between;
+  padding: 0 3rem 0 3rem;
+  /* background: #000; */
   align-items: end;
+  gap: 2rem;
 }
 
 .pesquisa {
@@ -72,34 +182,90 @@ img{
   font-size: 22px;
   font-weight: 500;
 }
-
-.tabela{
-  height: 60vh;
-  /* padding: 1rem; */
-  overflow-y: auto;
+.listaProdutos{
+  /* background: green; */
+  padding: 0 3rem 0 3rem;
 }
-thead{
-  position: static  ;
+.lista{
+  /* background: yellow; */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.table {
+.listaItem{
+  display: flex;
+  border: 1px solid rgb(198, 198, 198);
+  border-radius: 10px;
+  height: 10vh;
+  display: flex;
+  box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.1);
+  transition: 300ms;
+}
+.listaItem:hover{
+  transform: scale(1.01);
+}
+.listaItem .imagem{
+  width: 12%;
+  border-radius: 10px 10px 10px 10px;
+}
+.listaItem .imagem img{
   width: 100%;
-  height: 70%;
-  overflow-y: auto;
+  object-fit: cover;
+  height: 100%;
+  border-radius: 10px 0 0 10px;
 }
-
-.table th, .table td{
-  /* background: red; */
-  /* display: flex; */
-  gap: 4px;
-  /* vertical-align: middle; */
-  align-items: center;
-  text-align: center;
-
-}
-.botoes{
-  /* background: blue; */
+.listaItem .conteudo{
+  /* background: green; */
   width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem 0 2rem;
 }
+.listaProdutos .descricao{
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  height: 100%;
+}
+.descricao .nomeProduto{
+  font-size: 18px;
+  color: red;
+}
+.descricao .acompanhamentoProduto{
+  font-size: 12px;
+  color:green;
+}
+.conteudo .opcoes{
+  display: flex;
+  gap: 1rem;
+}
+ button{
+  /* background: #000; */
+  border-radius: 10px;
+  padding: 2px 10px 2px 10px;
+  /* width: 80px; */
+  background: white;
+  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.1);
+}
+.opcoes button:hover{
+  background: rgb(234, 234, 234);
+}
+.excluir{
+  border: 1px dashed red;
+  color: red;
+  width: 80px;
+}
+.editar{
+  border: 1px dashed blue;
+  color: blue;
+  width: 80px;
+}
+.cadastrar{
+  border: 1px dashed green;
+  color: green;
+ 
+}
+

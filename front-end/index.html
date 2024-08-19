@@ -18,63 +18,86 @@
 	<div id="app" class="app">
 		<div class="nav">
 			<div class="logo">
-				<img src="./Assets/Images/Logo-acai-Png-1024x1024-removebg-preview (1).png" alt="">
+				<!-- <img src="./Assets/Images/Logo-acai-Png-1024x1024-removebg-preview (1).png" alt=""> -->
 			</div>
 			<div class="labs">
+				<div :class="['labsItem', { 'click': inicioShow }]" @click="abrirInicio()">Início</div>
 				<div :class="['labsItem', { 'click': produtosShow }]" @click="buscarProdutos()">Produtos</div>
 				<div :class="['labsItem', { 'click': pedidosShow }]" @click="buscarPedidos">Pedidos</div>
-				<div :class="['labsItem', { 'click': suporteShow }]" @click="abreSuporte()">Suporte</div>
+			</div>
+		</div>
+		<div class="inicio" v-if="inicioShow">
+			<!-- <button @click="buscarSugestoes">opa</button> -->
+			<div class="carrossel" >
+				<img :src="foto.url" alt="" v-for="(foto, index) in fotosCarrossel" :key="index">
+			</div>
+			<div class="sugestoes">
+				Sugestões
+				<div class="sugestoesLista" >
+					<div class="sugestoesItem" v-for="sugestao in sugestoes"   :key="sugestao.id">
+						<div class="imagem">
+							<img :src="sugestao.url" alt="foto">
+						</div>
+						<div class="descricao">
+							<div class="nomeProduto"> #{{sugestao.produto_id}} - {{sugestao.produto_descricao}} </div>
+							<div class="acompanhamentos">Acompanhamentos - {{sugestao.acompanhamento}}</div>
+							<div class="preco">Por apenas R${{sugestao.preco}}</div>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 		</div>
 		<div class="produtos" v-if="produtosShow">
 			<div class="pesquisaCadastro">
 				<div class="pesquisa">
 					<div class="pesquisaTitulo">
-						Cadastro de Usuários
-					</div>
-					<div class="pesquisaItem">
-						<label for="">Usuário</label>
-						<input type="text" class="form-control" placeholder="Buscar">
-					</div>
-					<div class="pesquisaItem">
-						<label for="">Data</label>
-						<input type="date" class="form-control">
-					</div>
-					<div class="pesquisaItem">
-						<button class="btn btn-success" @click="buscarUsuarios">Buscar</button>
+						Produtos Cadastrados
 					</div>
 				</div>
 				<div class="cadastro">
-					<button class="btn btn-primary" @click="abrirModalCadastrar">Cadastrar</button>
-					<div class="modal" tabindex="-1" id="modalCadastrar">
+					<button class="cadastrar" @click="abrirModalCadastrarProduto">Cadastrar produto</button>
+					<div class="modal" tabindex="-1" id="cadastrarProduto">
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title">Cadastro de Usuário</h5>
+									<h5 class="modal-title">Cadastrar produto</h5>
 									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
 									<div class="cadastroUsuario">
 										<form>
 											<div class="formItem">
-												<label for="">Nome</label>
-												<input type="text" class="form-control" placeholder="Nome" v-model="nome">
+												<label for="">Tipo de produto</label>
+												<select v-model="tipoProduto" class="form-control">
+													<option value="" select disabled>Selecione um tipo</option>
+													<option :value="tipo.value" v-for="(tipo, index) in tipos" :key="index">{{tipo.descricao}}</option>
+												</select>
+												
 											</div>
 											<div class="formItem">
-												<label for="">Sobrenome</label>
-												<input type="text" class="form-control" placeholder="Sobrenome" v-model="sobrenome">
+												<label for="">Nome do produto</label>
+												<input type="text" class="form-control" placeholder="Nome do produto" v-model="nomeProduto">
 											</div>
 											<div class="formItem">
-												<label for="">Email</label>
-												<input type="text" class="form-control" placeholder="Email" v-model="email">
+												<label for="">Acompanhamento</label>
+												<input type="text" class="form-control" placeholder="Acompanhamento"  v-model="acompanhamento">
+											</div>
+											<div class="formItem">
+												<label for="">Preco</label>
+												<input type="text" class="form-control" placeholder="Preço do produto" v-model="preco">
+											</div>
+											<div class="formItem">
+												<label for="">Url</label>
+												<input type="text" class="form-control" placeholder="Url da imagem" v-model="url">
 											</div>
 										</form>
 									</div>
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-									<button type="submit" class="btn btn-success" :disabled="isFormInvalid"
-										@click="cadastrarUsuario(nome, sobrenome, email)">Cadastrar
+									<button type="submit" class="btn btn-success" 
+										@click="cadastrarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto)">Cadastrar
 									</button>
 								</div>
 							</div>
@@ -82,79 +105,80 @@
 					</div>
 				</div>
 			</div>
-			<div class="tabela">
+			<div class="listaProdutos">
 				<div class="alert alert-primary" role="alert" v-show="carregandoTabela">
 					Buscando dados...
 				</div>
 				<div class="alert alert-danger" role="alert" v-show="erroTabela">
 					Não há dados para exibir.
 				</div>
-				<table class="table" v-show="usuarios.length > 0">
-					<thead>
-						<tr>
-							<th scope="col">Nº</th>
-							<th scope="col">Nome</th>
-							<th scope="col">sobrenome</th>
-							<th scope="col">Email</th>
-							<th scope="col">Data de criação</th>
-							<th scope="col">Data de edição</th>
-							<th scope="col">Opções</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="(usuario, index) in usuarios" :key="index">
-							<td>{{ usuario.usuario_id }}</td>
-							<td>{{ usuario.nome }}</td>
-							<td>{{ usuario.sobrenome }}</td>
-							<td>{{ usuario.email }}</td>
-							<td>{{ usuario.data_criacao }}</td>
-							<td>{{ usuario.data_edicao }}</td>
-							<td>
-								<div class="botoes">
-									<button @click="abrirModalEditar(usuario)" class="btn btn-primary">Editar</button>
-									<div class="modal" tabindex="-1" id="modalEditar">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title">Editar de Usuário</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<div class="lista">
+					<div class="listaItem" v-for="(produto, index) in produtos" :key="index">
+						<div class="imagem">
+							<img :src="produto.url" alt="">
+						</div>
+						<div class="conteudo">
+							<div class="descricao">
+								<div class="nomeProduto">
+									{{produto.produto_id}} -	{{produto.produto_descricao}}
+								</div>
+								<div class="acompanhamentoProduto">
+									{{produto.acompanhamento}}
+								</div>
+							</div>
+							<div class="opcoes">
+								<button @click="abrirModalEditarProduto(produto)" class="editar">Editar</button>
+								<div class="modal" tabindex="-1" id="editarProduto">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Editar produto</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<div class="cadastroUsuario">
+													<form>
+														<div class="formItem">
+															<label for="">Tipo de produto</label>
+															<select v-model="tipoProduto" class="form-control" >
+																<option value="" select disabled>Selecione um tipo</option>
+																<option :value="tipo.value" v-for="(tipo, index) in tipos" :key="index">{{tipo.descricao}}</option>
+															</select>
+															
+														</div>
+														<div class="formItem">
+															<label for="">Nome do produto</label>
+															<input type="text" class="form-control" placeholder="Nome do produto" v-model="nomeProduto">
+														</div>
+														<div class="formItem">
+															<label for="">Acompanhamento</label>
+															<input type="text" class="form-control" placeholder="Acompanhamento"  v-model="acompanhamento">
+														</div>
+														<div class="formItem">
+															<label for="">Preco</label>
+															<input type="text" class="form-control"  placeholder="Preço do produto" v-model="preco">
+														</div>
+														<div class="formItem">
+															<label for="">Url</label>
+															<input type="text" class="form-control" placeholder="Url da imagem" v-model="url">
+														</div>
+													</form>
 												</div>
-												<div class="modal-body">
-													<div class="cadastroUsuario">
-														<form>
-															<div class="formItem">
-																<label for="">Nome</label>
-																<input type="text" class="form-control" placeholder="Nome" v-model="nome">
-															</div>
-															<div class="formItem">
-																<label for="">Sobrenome</label>
-																<input type="text" class="form-control" placeholder="Sobrenome"
-																	value=`${usuario.sobrenome}` v-model="sobrenome">
-															</div>
-															<div class="formItem">
-																<label for="">Email</label>
-																<input type="text" class="form-control" placeholder="Email" v-model="email">
-															</div>
-														</form>
-													</div>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-													<button type="submit" class="btn btn-success" :disabled="isFormInvalid"
-														@click="editarUsuario(nome, sobrenome, email, usuario.usuario_id)">Salvar alteração
-													</button>
-												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+												<button type="submit" class="btn btn-success" 
+													@click="editarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto, produto.produto_id)">Salvar Alterações
+												</button>
 											</div>
 										</div>
 									</div>
-									<button @click="deletarUsuario(usuario.usuario_id, usuario.nome)"
-										class="btn btn-danger">Excluir</button>
 								</div>
-
-							</td>
-						</tr>
-					</tbody>
-				</table>
+								<button @click="deletarProduto(produto.produto_id)" class="excluir">Excluir</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 
@@ -179,108 +203,174 @@
 					email: '',
 					carregandoTabela: false,
 					erroTabela: false,
+					inicioShow: true,
+					fotosCarrossel: [
+						{
+							id: 1,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						{
+							id: 2,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						{
+							id: 3,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						{
+							id: 4,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						{
+							id: 5,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						{
+							id: 6,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						{
+							id: 7,
+							url: "Assets/Images/acai-03-1000x1000.jpg"
+						},
+						
+
+					],
+					sugestoes: [],
+					tipos: [
+						{id: 1, value: "sugestao", descricao: "Sugestão"},
+						{id: 2, value: "promocao", descricao: "Promoção"}
+					],
+					tipoProduto: '',
+					produtos: [],
+					nomeProduto: '',
+					acompanhamento: '',
+					preco: '',
+					url: '',
+					produto: {} // Produto a ser editado
+					
+
+
 				}
 			},
 			computed: {
 				isFormInvalid() {
-					return !this.nome || !this.sobrenome || !this.email;
+					return !this.nomeProduto || !this.acompanhamento || !this.preco || !this.url;
 				},
 			},
+			mounted(){
+				this.buscarSugestoes();
+			},
 			methods: {
-				buscarProdutos(){
-					this.produtosShow = true
+			async  buscarSugestoes(){
+					try {
+					 const response = await axios.get('http://localhost:3000/dados-produtos/sugestoes');
+						console.log("Fotos do Carrossel 1: ", response)
+						if(response.data){
+							console.log("Fotos do Carrossel 2: ", response.data)
+							this.sugestoes = response.data;
+						}
+					} catch (error) {
+						console.error('Error:', error)
+					}
+				},
+				abrirInicio(){
+					this.inicioShow = true
+					this.produtosShow = false
 					this.pedidosShow = false
 				},
-				buscarPedidos(){
-					this.produtosShow = false
+				buscarPedidos() {
 					this.pedidosShow = true
+					this.produtosShow = false
+					this.inicioShow = false
 				},
-				abrirModalCadastrar() {
-					$('#modalCadastrar').modal('show');
+				abrirModalCadastrarProduto() {
+					$('#cadastrarProduto').modal('show');
 				},
-				abrirModalEditar(usuario) {
-					this.nome = usuario.nome;
-					this.sobrenome = usuario.sobrenome;
-					this.email = usuario.email;
-					this.usuario = usuario;
-					$('#modalEditar').modal('show');
+				abrirModalEditarProduto(produto) {
+					$('#editarProduto').modal('show');
+					this.tipoProduto = produto.tipoProduto;
+					this.nomeProduto = produto.nomeProduto;
+					this.acompanhamento = produto.acompanhamento;
+					this.preco = produto.preco;
+					this.url = produto.url;
+					
 				},
 
-				async cadastrarUsuario(nome, sobrenome, email) {
-					console.log("Dados:", nome, sobrenome, email);
+				async cadastrarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto) {
+					console.log("Dados:", nomeProduto, acompanhamento, preco, url, tipoProduto);
 
-					if (this.isFormInvalid) {
-						alert('Por favor, preencha todos os campos.');
-						return;
-					}
-
+					// if (this.isFormInvalid) {
+					// 	alert('Por favor, preencha todos os campos.');
+					// 	return;
+					// }
 					try {
-						const response = await axios.post('http://localhost:3000/api/criar-usuario', {
-							nome: this.nome,
-							sobrenome: this.sobrenome,
-							email: this.email
+						const response = await axios.post('http://localhost:3000/dados-produtos/cadastrar-produto', {
+							nomeProduto, 
+							acompanhamento, 
+							preco, 
+							url,
+							tipoProduto
 						});
 
 						if (response.data.message) {
-							alert("Usuário criado!")
+							alert("Produto cadastrado!")
 
-							this.nome = ''
-							this.sobrenome = ''
-							this.email = ''
-							$('#modalCadastrar').modal('hide');
+							this.tipoProduto = ''
+							this.nomeProduto = ''
+							this.acompanhamento = ''
+							this.preco = ''
+							this.url = ''
+							// $('#cadas').modal('hide');
 						} else {
-							alert("Erro ao criar usuário!")
+							alert("Erro ao cadastrar produto!")
 						}
 
 					} catch (error) {
 						console.error('Error:', error);
-						alert("Erro ao criar usuário!")
+						alert("Erro na requisição!")
 					}
-					this.buscarUsuarios();
+					this.buscarSugestoes();
+					this.buscarProdutos();
 				},
 
-				async buscarUsuarios() {
-					this.carregandoTabela = true;
-					this.erroTabela = false;
+				async buscarProdutos() {
+					this.produtosShow = true
+					this.pedidosShow = false
+					this.inicioShow = false
 					try {
-							const response = await axios.get('http://localhost:3000/api/usuarios');
-							if (response.data.length > 0) {
-									// Supondo que cada usuário tem uma propriedade 'dataCadastro' com a data
-									this.usuarios = response.data.map(usuario => ({
-											...usuario,
-											dataCadastroFormatada: dayjs(usuario.data_cadastro).format('DD/MM/YYYY - HH:mm'),
-											dataEdicaoFormatada: dayjs(usuario.data_edicao).format('DD/MM/YYYY - HH:mm') // Formata a data como dia/mês/ano
-									}));
-									console.log("Usuários:", this.usuarios);
-									this.carregandoTabela = false;
-							} else {
-									this.erroTabela = true;
-									this.carregandoTabela = false;
-							}
+						const response = await axios.get('http://localhost:3000/dados-produtos/produtos');
+						if (response.data.length > 0) {
+							// Supondo que cada usuário tem uma propriedade 'dataCadastro' com a data
+							this.produtos = response.data;
+							console.log("Produtos:", this.produtos);
+							// this.carregandoTabela = false;
+						} else {
+							// this.erroTabela = true;
+							// this.carregandoTabela = false;
+						}
 
 					} catch (error) {
-							console.error('Error:', error);
-							this.carregandoTabela = false;
-							this.erroTabela = true;
+						console.error('Error:', error);
+						// this.carregandoTabela = false;
+						// this.erroTabela = true;
 					}
+					this.buscarSugestoes();
 				},
 
-				async editarUsuario(nome, sobrenome, email, id) {
-					console.log("Id:", id)
+				async editarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto, id) {
+					console.log("Editando:", nomeProduto, acompanhamento, preco, url, tipoProduto, id)
 					this.editar = true;
 					this.menssagem = '';
 					try {
-						const response = await axios.post('http://localhost:3000/api/editar-nome', {
-							nome: nome,
-							sobrenome: sobrenome,
-							email: email,
-							usuario_id: id
+						const response = await axios.post('http://localhost:3000/dados-produtos/editar-produto', {
+							nomeProduto, acompanhamento, preco, url, tipoProduto, id
 						});
 
 						if (response.data.message) {
-							alert("Nome Atualizado");
-							this.nome = ''
-							this.sobrenome = ''
+							alert("produto Atualizado");
+							this.nomeProduto = ''
+							this.acompanhamento = ''
 							this.email = ''
 
 							$('#modalEditar').modal('hide');
@@ -292,28 +382,27 @@
 						console.error('Error:', error);
 						this.menssagem = "O nome não foi Atualizado"
 					}
-
-					this.buscarUsuarios();
+					this.buscarProdutos();
 				},
 
-				async deletarUsuario(id) {
+				async deletarProduto(id) {
 					try {
-						const response = await axios.post('http://localhost:3000/api/deletar-usuario', {
-							usuario_id: id,
-							excluido: "S"
+						const response = await axios.post('http://localhost:3000/dados-produtos/deletar-produto', {
+							id
 						});
 
 						if (response.data.message) {
-							// alert(`Usuário ${id} deletado com sucesso!`);
-							this.buscarUsuarios()
+							alert(`Produto ${id} deletado com sucesso!`);
+							this.produtos = []
 						} else {
-							alert("O usuário não foi deletado!");
+							alert("O produto não foi deletado!");
 						}
 
 					} catch (error) {
 						console.error('Error:', error);
-						alert("O usuário não foi deletado!");
+						alert("O produto não foi deletado!");
 					}
+					this.buscarProdutos();
 				}
 			},
 		})
