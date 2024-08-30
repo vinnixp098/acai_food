@@ -4,8 +4,8 @@ Repositório destinado a armazenar os códigos referentes ao projeto "Açaí Foo
 ##Detalhes do Front End
 
 ###Linguagens e tecnologias:
-HTML 5;
-CSS 3;
+    HTML 5;
+    CSS 3;
 Vue.js;
 Bootstrap 5;
 Axios.
