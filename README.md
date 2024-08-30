@@ -2,6 +2,7 @@
 Repositório destinado a armazenar os códigos referentes ao projeto "Açaí Food", contendo desde o Front End até o Back End.
 
 ##Detalhes do Front End
+
 ###Linguagens e tecnologias:
 HTML 5;
 CSS 3;
@@ -10,6 +11,7 @@ Bootstrap 5;
 Axios.
 
 ##Detalhes do Back-End
+
 ###Linguagens e tecnologias:
 Node.js;
 Javascript;
