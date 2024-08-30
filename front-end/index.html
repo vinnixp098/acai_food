@@ -28,13 +28,14 @@
 		</div>
 		<div class="inicio" v-if="inicioShow">
 			<!-- <button @click="buscarSugestoes">opa</button> -->
-			<div class="carrossel" >
+			<div class="carrossel">
 				<img :src="foto.url" alt="" v-for="(foto, index) in fotosCarrossel" :key="index">
 			</div>
 			<div class="sugestoes">
 				Sugestões
-				<div class="sugestoesLista" >
-					<div class="sugestoesItem" v-for="sugestao in sugestoes"   :key="sugestao.id">
+				<div class="sugestoesLista">
+					<div class="sugestoesItem" v-for="sugestao in sugestoes" :key="sugestao.id"
+						@click="abrirModalProdutoSugestao(sugestao)">
 						<div class="imagem">
 							<img :src="sugestao.url" alt="foto">
 						</div>
@@ -44,8 +45,49 @@
 							<div class="preco">Por apenas R${{sugestao.preco}}</div>
 						</div>
 					</div>
+
+					<!-- Modal -->
+					<div class="modal fade" tabindex="-1" id="modalProdutoSugestao">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Criar Pedido</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body" v-if="sugestaoSelecionada">
+									<div class="produtoSugestao">
+										<div class="produtoSugestaoTop">
+											<div class="fotoSugestao">
+												<img :src="sugestaoSelecionada.url" alt="">
+											</div>
+											<div class="sugestaoConteudo">
+												<div class="conteudoDescricao">
+													<div class="descricaoTop">
+														{{sugestaoSelecionada.produto_descricao}} -R$ {{sugestaoSelecionada.preco}}
+													</div>
+													<div class="descricaoDown">
+														Acompanhamentos - {{sugestaoSelecionada.acompanhamento}}
+													</div>
+												</div>
+												<div class="contador">
+													<button @click="decrementarQuantidade">-</button>
+													<span>{{quantidade}}</span>
+													<button @click="incrementarQuantidade">+</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+									<button type="button" class="btn btn-success" @click="editarProduto">Salvar Alterações</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				
+
+
 			</div>
 		</div>
 		<div class="produtos" v-if="produtosShow">
@@ -71,9 +113,10 @@
 												<label for="">Tipo de produto</label>
 												<select v-model="tipoProduto" class="form-control">
 													<option value="" select disabled>Selecione um tipo</option>
-													<option :value="tipo.value" v-for="(tipo, index) in tipos" :key="index">{{tipo.descricao}}</option>
+													<option :value="tipo.value" v-for="(tipo, index) in tipos" :key="index">{{tipo.descricao}}
+													</option>
 												</select>
-												
+
 											</div>
 											<div class="formItem">
 												<label for="">Nome do produto</label>
@@ -81,7 +124,7 @@
 											</div>
 											<div class="formItem">
 												<label for="">Acompanhamento</label>
-												<input type="text" class="form-control" placeholder="Acompanhamento"  v-model="acompanhamento">
+												<input type="text" class="form-control" placeholder="Acompanhamento" v-model="acompanhamento">
 											</div>
 											<div class="formItem">
 												<label for="">Preco</label>
@@ -96,7 +139,7 @@
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-									<button type="submit" class="btn btn-success" 
+									<button type="submit" class="btn btn-success"
 										@click="cadastrarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto)">Cadastrar
 									</button>
 								</div>
@@ -120,7 +163,7 @@
 						<div class="conteudo">
 							<div class="descricao">
 								<div class="nomeProduto">
-									{{produto.produto_id}} -	{{produto.produto_descricao}}
+									{{produto.produto_id}} - {{produto.produto_descricao}}
 								</div>
 								<div class="acompanhamentoProduto">
 									{{produto.acompanhamento}}
@@ -140,23 +183,26 @@
 													<form>
 														<div class="formItem">
 															<label for="">Tipo de produto</label>
-															<select v-model="tipoProduto" class="form-control" >
+															<select v-model="tipoProduto" class="form-control">
 																<option value="" select disabled>Selecione um tipo</option>
-																<option :value="tipo.value" v-for="(tipo, index) in tipos" :key="index">{{tipo.descricao}}</option>
+																<option :value="tipo.value" v-for="(tipo, index) in tipos" :key="index">
+																	{{tipo.descricao}}</option>
 															</select>
-															
+
 														</div>
 														<div class="formItem">
 															<label for="">Nome do produto</label>
-															<input type="text" class="form-control" placeholder="Nome do produto" v-model="nomeProduto">
+															<input type="text" class="form-control" placeholder="Nome do produto"
+																v-model="nomeProduto">
 														</div>
 														<div class="formItem">
 															<label for="">Acompanhamento</label>
-															<input type="text" class="form-control" placeholder="Acompanhamento"  v-model="acompanhamento">
+															<input type="text" class="form-control" placeholder="Acompanhamento"
+																v-model="acompanhamento">
 														</div>
 														<div class="formItem">
 															<label for="">Preco</label>
-															<input type="text" class="form-control"  placeholder="Preço do produto" v-model="preco">
+															<input type="text" class="form-control" placeholder="Preço do produto" v-model="preco">
 														</div>
 														<div class="formItem">
 															<label for="">Url</label>
@@ -167,8 +213,9 @@
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-												<button type="submit" class="btn btn-success" 
-													@click="editarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto, produto.produto_id)">Salvar Alterações
+												<button type="submit" class="btn btn-success"
+													@click="editarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto, produto.produto_id)">Salvar
+													Alterações
 												</button>
 											</div>
 										</div>
@@ -233,13 +280,43 @@
 							id: 7,
 							url: "Assets/Images/acai-03-1000x1000.jpg"
 						},
-						
+
 
 					],
-					sugestoes: [],
+					sugestoes: [
+						{
+							produto_id: 1,
+							produto_descricao: "Clássico",
+							acompanhamento: "Açaí com leite em pó, leite condensado e calda",
+							preco: "12,99",
+							url: "https://assets.menuintegrado.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNzAyQnc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--f0e23fac4be646b047e46f5bc99bca9883cd81a6/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQXBBQmFRS1FBUT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--a75f1ee3dfed9b508046bf53274a2ed04773a3ac/Cl%C3%A1ssico%20Edit.png"
+						},
+						{
+							produto_id: 2,
+							produto_descricao: "Chocolove",
+							acompanhamento: "Açaí com leite em pó, leite condensado e calda",
+							preco: "14,99",
+							url: "https://assets.menuintegrado.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOGsyQnc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--cf318b9fea6f5c54c0e8d4669009f7f0757de15d/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQXBBQmFRS1FBUT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--a75f1ee3dfed9b508046bf53274a2ed04773a3ac/Chocolove%20Edit.png"
+						},
+						{
+							produto_id: 3,
+							produto_descricao: "Tradicional",
+							acompanhamento: "Açaí com banana, granola, leite em pó e leite condensado",
+							preco: "13,99",
+							url: "https://assets.menuintegrado.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOEEyQnc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--78614a8543f5a34f05032d7db69c0cd2788d66bc/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQXBBQmFRS1FBUT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--a75f1ee3dfed9b508046bf53274a2ed04773a3ac/Tradicional%20Edit.png"
+						},
+						{
+							produto_id: 4,
+							produto_descricao: "Mix",
+							acompanhamento: "Açaí com gotas de chocolate, paçoquinha, leite em pó e leite condensado",
+							preco: "14,99",
+							url: "https://assets.menuintegrado.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOHcyQnc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--891bd659df8eff3e51293cb834c4b1ddcab7f7e3/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RTNKbGMybDZaVjkwYjE5bWFXeHNXd2RwQXBBQmFRS1FBUT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--a75f1ee3dfed9b508046bf53274a2ed04773a3ac/Mix%20Edit.png"
+						}
+
+					],
 					tipos: [
-						{id: 1, value: "sugestao", descricao: "Sugestão"},
-						{id: 2, value: "promocao", descricao: "Promoção"}
+						{ id: 1, value: "sugestao", descricao: "Sugestão" },
+						{ id: 2, value: "promocao", descricao: "Promoção" }
 					],
 					tipoProduto: '',
 					produtos: [],
@@ -247,8 +324,8 @@
 					acompanhamento: '',
 					preco: '',
 					url: '',
-					produto: {} // Produto a ser editado
-					
+					produto: {}, // Produto a ser editado
+					sugestaoSelecionada: null
 
 
 				}
@@ -258,15 +335,15 @@
 					return !this.nomeProduto || !this.acompanhamento || !this.preco || !this.url;
 				},
 			},
-			mounted(){
+			mounted() {
 				this.buscarSugestoes();
 			},
 			methods: {
-			async  buscarSugestoes(){
+				async buscarSugestoes() {
 					try {
-					 const response = await axios.get('http://localhost:3000/dados-produtos/sugestoes');
+						const response = await axios.get('http://localhost:3000/dados-produtos/sugestoes');
 						console.log("Fotos do Carrossel 1: ", response)
-						if(response.data){
+						if (response.data) {
 							console.log("Fotos do Carrossel 2: ", response.data)
 							this.sugestoes = response.data;
 						}
@@ -274,7 +351,7 @@
 						console.error('Error:', error)
 					}
 				},
-				abrirInicio(){
+				abrirInicio() {
 					this.inicioShow = true
 					this.produtosShow = false
 					this.pedidosShow = false
@@ -287,6 +364,10 @@
 				abrirModalCadastrarProduto() {
 					$('#cadastrarProduto').modal('show');
 				},
+				abrirModalProdutoSugestao(sugestao) {
+					this.sugestaoSelecionada = sugestao;
+					$('#modalProdutoSugestao').modal('show');
+				},
 				abrirModalEditarProduto(produto) {
 					$('#editarProduto').modal('show');
 					this.tipoProduto = produto.tipoProduto;
@@ -294,7 +375,7 @@
 					this.acompanhamento = produto.acompanhamento;
 					this.preco = produto.preco;
 					this.url = produto.url;
-					
+
 				},
 
 				async cadastrarProduto(nomeProduto, acompanhamento, preco, url, tipoProduto) {
@@ -306,9 +387,9 @@
 					// }
 					try {
 						const response = await axios.post('http://localhost:3000/dados-produtos/cadastrar-produto', {
-							nomeProduto, 
-							acompanhamento, 
-							preco, 
+							nomeProduto,
+							acompanhamento,
+							preco,
 							url,
 							tipoProduto
 						});
@@ -403,6 +484,17 @@
 						alert("O produto não foi deletado!");
 					}
 					this.buscarProdutos();
+				},
+
+				incrementarQuantidade() {
+					if (this.sugestaoSelecionada) {
+						this.sugestaoSelecionada.quantidade = (this.sugestaoSelecionada.quantidade || 1) + 1;
+					}
+				},
+				decrementarQuantidade() {
+					if (this.sugestaoSelecionada && this.sugestaoSelecionada.quantidade > 1) {
+						this.sugestaoSelecionada.quantidade -= 1;
+					}
 				}
 			},
 		})

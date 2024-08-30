@@ -99,8 +99,8 @@ body {
   /* background: red; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 1rem;
-  justify-content: start;
+  gap: 2rem;
+  /* justify-content: start; */
 }
 .sugestoesItem{
   /* background: green; */
@@ -117,7 +117,7 @@ body {
   transform: scale(1.02);
 }
 .sugestoesItem .imagem{
-  height: 70%;
+  height: 65%;
   width: 100%;
 
 }
@@ -267,5 +267,65 @@ body {
   border: 1px dashed green;
   color: green;
  
+}
+/* modal sugestao */
+
+.produtoSugestao{
+  /* background: green; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 60vh;
+  padding: 1rem;
+}
+.produtoSugestaoTop{
+  box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.15);
+  height: 15vh;
+  width: 100%;
+  border: 1px solid rgb(202, 202, 202);
+  /* background: red; */
+  display: flex;
+  border-radius: 10px;
+  justify-content: space-between;
+}
+.fotoSugestao{
+  width: 20%;
+  background: yellow;
+  border-radius: 10px 0 0 10px;
+}
+.fotoSugestao img{
+  width: 100%;
+  height: 100%;
+  border-radius: 10px 0 0 10px;
+
+}
+.sugestaoConteudo{
+  justify-content: space-between;
+  width: 80%;
+  /* background: red; */
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0 10px 10px 0;
+}
+
+.conteudoDescricao{
+  /* background: green; */
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+}
+.descricaoTop{
+  font-size: 18px;
+  font-weight: 600;
+  color: #4f4f4f;
+}
+.descricaoDown{
+  font-size: 12px;
+}
+.contador{
+  display: flex;
+
 }
 
