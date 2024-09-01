@@ -33,7 +33,7 @@ const deleteProductById = async (id) => {
 };
 
 const editProductById = async (nomeProduto, acompanhamento, preco, url, tipoProduto, id) => {
-  console.log("Dados vindos: ", nomeProduto, acompanhamento, preco, url, tipoProduto, id)
+  console.log("Dados vindos: ", nomeProduto, acompanhamento, preco, url, tipoProduto, id);
   try {
     const query = `
       UPDATE estudos.produtos 
